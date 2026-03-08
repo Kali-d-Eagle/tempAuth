@@ -66,14 +66,32 @@ export default function Home() {
     }
   };
 
-  const verifyOtp = async () => {
-    const docRef = await getDoc(doc(db, "otps", TARGET_EMAIL));
-    const data = docRef.data();
+const verifyOtp = async () => {
+    try {
+      const docRef = await getDoc(doc(db, "otps", TARGET_EMAIL));
+      
+      if (!docRef.exists()) {
+        alert("No OTP found. Please send a new one.");
+        return;
+      }
 
-    if (data && data.code === otp && new Date() < data.expiresAt.toDate()) {
-      window.location.href = "/dashboard";
-    } else {
-      alert("Invalid or Expired OTP.");
+      const data = docRef.data();
+      const dbCode = String(data.code); // Force string conversion
+      const userCode = String(otp);     // Force string conversion
+      const expiry = data.expiresAt.toDate(); // Convert Firestore Timestamp to JS Date
+
+      console.log("Comparing:", { dbCode, userCode, expiry, now: new Date() });
+
+      if (dbCode === userCode && new Date() < expiry) {
+        window.location.href = "/dashboard";
+      } else if (new Date() >= expiry) {
+        alert("OTP has expired. Please request a new one.");
+      } else {
+        alert("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Verification Error:", error);
+      alert("Verification failed. Check console.");
     }
   };
 
