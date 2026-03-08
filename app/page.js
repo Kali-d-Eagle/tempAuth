@@ -12,34 +12,6 @@ export default function Home() {
   const [status, setStatus] = useState('');
 
   /*
-  const sendOtp = async () => {
-    
-    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiryTime = new Date(Date.now() + 15 * 60000); // 15 minutes expiry
-
-    // Save to Firestore
-    await setDoc(doc(db, "otps", TARGET_EMAIL), { 
-      code: otpCode, 
-      expiresAt: expiryTime 
-    });
-
-    // Send via EmailJS - ensure these IDs match your dashboard exactly
-    try {
-      await emailjs.send('service_lue4xbj', 'template_5izfblb', {
-        passcode: otpCode,
-        time: expiryTime.toLocaleTimeString(),
-        email: TARGET_EMAIL
-      }, '4DI8hU5KC3hymJIJx'); // <--- PASTE YOUR PUBLIC KEY HERE
-      
-      setStatus("OTP sent! Check your email.");
-    } catch (e) {
-      console.error("EmailJS Error:", e);
-      setStatus("Failed to send email. Check Console for details.");
-    }
-    
-  };
-
-  */
 
   const sendOtp = async () => {
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
@@ -66,6 +38,43 @@ export default function Home() {
     }
   };
 
+*/
+
+  const sendOtp = async () => {
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiryTime = new Date(Date.now() + 15 * 60000);
+
+    try {
+      console.log("Attempting to save to Firestore...");
+      // Save to Firestore
+      await setDoc(doc(db, "otps", TARGET_EMAIL), { 
+        code: otpCode, 
+        expiresAt: expiryTime 
+      });
+      console.log("Save successful!");
+    } catch (saveError) {
+      console.error("CRITICAL ERROR: Failed to save to Firestore:", saveError);
+      setStatus("Error: Could not save OTP to database.");
+      return; // Stop here if save fails
+    }
+
+    // Only proceed to email if save succeeded
+    try {
+      console.log("Attempting to send email...");
+      await emailjs.send('service_lue4xbj', 'template_5q7dpyp', {
+        passcode: otpCode,
+        time: expiryTime.toLocaleTimeString(),
+        email: TARGET_EMAIL
+      }, '4DI8hU5KC3hymJIJx'); 
+      
+      setStatus("OTP sent! Check your email.");
+    } catch (e) {
+      console.error("EmailJS Error:", e);
+      setStatus("Failed to send email.");
+    }
+  };
+
+  
 /*
 const verifyOtp = async () => {
     try {
