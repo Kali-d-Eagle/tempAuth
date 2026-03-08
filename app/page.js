@@ -11,7 +11,9 @@ export default function Home() {
   const [otp, setOtp] = useState('');
   const [status, setStatus] = useState('');
 
+  /*
   const sendOtp = async () => {
+    
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
     const expiryTime = new Date(Date.now() + 15 * 60000); // 15 minutes expiry
 
@@ -33,6 +35,34 @@ export default function Home() {
     } catch (e) {
       console.error("EmailJS Error:", e);
       setStatus("Failed to send email. Check Console for details.");
+    }
+    
+  };
+
+  */
+
+  const sendOtp = async () => {
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiryTime = new Date(Date.now() + 15 * 60000);
+
+    const templateParams = {
+      passcode: otpCode,
+      time: expiryTime.toLocaleTimeString(),
+      email: TARGET_EMAIL
+    };
+
+    console.log("Sending to EmailJS:", {
+      service: 'service_c6ihqjs',
+      template: 'template_5izfblb',
+      params: templateParams
+    });
+
+    try {
+      const response = await emailjs.send('service_lue4xbj', 'template_5q7dpyp', templateParams, '4DI8hU5KC3hymJIJx');
+      setStatus("OTP sent!");
+    } catch (error) {
+      console.error("EmailJS Error Object:", error);
+      setStatus("Failed. Check Console.");
     }
   };
 
