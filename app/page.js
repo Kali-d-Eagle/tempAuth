@@ -18,10 +18,10 @@ export default function Home() {
 
     // Send via EmailJS
     try {
-      await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+      await emailjs.send('service_lue4xbj', 'template_5q7dpyp', {
         to_email: TARGET_EMAIL,
         otp_code: otpCode,
-      }, 'YOUR_PUBLIC_KEY');
+      }, '4DI8hU5KC3hymJIJx');
       setStatus("OTP sent! Check your email.");
     } catch (e) {
       setStatus("Failed to send email. Check EmailJS config.");
