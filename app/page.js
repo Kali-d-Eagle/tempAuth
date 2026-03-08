@@ -25,7 +25,7 @@ export default function Home() {
         passcode: otpCode,          // Matches {{passcode}} in your template
         time: expiryTime.toLocaleTimeString(), // Matches {{time}} in your template
         email: TARGET_EMAIL         // Matches {{email}} in your template
-      }, 'YOUR_PUBLIC_KEY');        // Put your public key here
+      }, '4DI8hU5KC3hymJIJx');        // Put your public key here
       
       setStatus("OTP sent! Check your email.");
     } catch (e) {
