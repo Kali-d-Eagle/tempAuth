@@ -11,20 +11,26 @@ export default function Home() {
 
   const sendOtp = async () => {
     const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
-    const expiresAt = new Date(Date.now() + 4 * 60000); // 4 minutes expiry
+    const expiryTime = new Date(Date.now() + 15 * 60000); // 15 mins based on your template text
 
     // Save to Firestore
-    await setDoc(doc(db, "otps", TARGET_EMAIL), { code: otpCode, expiresAt: expiresAt });
+    await setDoc(doc(db, "otps", TARGET_EMAIL), { 
+      code: otpCode, 
+      expiresAt: expiryTime 
+    });
 
-    // Send via EmailJS
+    // Send via EmailJS - Matches your template variables
     try {
-      await emailjs.send('service_lue4xbj', 'template_5q7dpyp', {
-        to_email: TARGET_EMAIL,
-        otp_code: otpCode,
-      }, '4DI8hU5KC3hymJIJx');
+      await emailjs.send('service_c6ihqjs', 'template_5izfblb', {
+        passcode: otpCode,          // Matches {{passcode}} in your template
+        time: expiryTime.toLocaleTimeString(), // Matches {{time}} in your template
+        email: TARGET_EMAIL         // Matches {{email}} in your template
+      }, 'YOUR_PUBLIC_KEY');        // Put your public key here
+      
       setStatus("OTP sent! Check your email.");
     } catch (e) {
-      setStatus("Failed to send email. Check EmailJS config.");
+      console.error("EmailJS Error:", e);
+      setStatus("Failed to send email. Check console.");
     }
   };
 
