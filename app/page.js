@@ -23,7 +23,7 @@ export default function Home() {
 
     // Send via EmailJS - ensure these IDs match your dashboard exactly
     try {
-      await emailjs.send('service_c6ihqjs', 'template_5izfblb', {
+      await emailjs.send('service_lue4xbj', 'template_5izfblb', {
         passcode: otpCode,
         time: expiryTime.toLocaleTimeString(),
         email: TARGET_EMAIL
