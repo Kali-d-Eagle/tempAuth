@@ -24,3 +24,18 @@ const sendOtp = async () => {
       setStatus("Failed. Check Console for details.");
     }
   };
+
+// ... (your imports and logic)
+
+export default function Home() {
+  // ... (your return JSX)
+  return (
+    <main style={{ padding: '50px' }}>
+      <h1>Private Access</h1>
+      <button onClick={sendOtp}>Send OTP to {TARGET_EMAIL}</button>
+      <p>{status}</p>
+      <input onChange={(e) => setOtp(e.target.value)} placeholder="Enter 6-digit OTP" />
+      <button onClick={verifyOtp}>Verify</button>
+    </main>
+  );
+}
