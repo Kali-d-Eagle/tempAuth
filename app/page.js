@@ -66,6 +66,7 @@ export default function Home() {
     }
   };
 
+/*
 const verifyOtp = async () => {
     try {
       const docRef = await getDoc(doc(db, "otps", TARGET_EMAIL));
@@ -88,6 +89,43 @@ const verifyOtp = async () => {
         alert("OTP has expired. Please request a new one.");
       } else {
         alert("Invalid OTP. Please try again.");
+      }
+    } catch (error) {
+      console.error("Verification Error:", error);
+      alert("Verification failed. Check console.");
+    }
+  };
+  */
+
+  const verifyOtp = async () => {
+    try {
+      const docRef = await getDoc(doc(db, "otps", TARGET_EMAIL));
+      
+      if (!docRef.exists()) {
+        console.error("DEBUG: No document found for email:", TARGET_EMAIL);
+        alert("No OTP found. Please send a new one.");
+        return;
+      }
+
+      const data = docRef.data();
+      
+      // Force both to strings to ensure we are comparing apples to apples
+      const dbCode = String(data.code).trim();
+      const userCode = String(otp).trim(); 
+      const expiry = data.expiresAt.toDate(); 
+
+      console.log("--- OTP Verification Debug ---");
+      console.log("Stored in DB:", dbCode);
+      console.log("Input by User:", userCode);
+      console.log("Expiry Date:", expiry);
+      console.log("Current Time:", new Date());
+      console.log("Match Status:", dbCode === userCode);
+      console.log("Expiry Status:", new Date() < expiry);
+
+      if (dbCode === userCode && new Date() < expiry) {
+        window.location.href = "/dashboard";
+      } else {
+        alert("Invalid or Expired OTP. Check Console (F12) for details.");
       }
     } catch (error) {
       console.error("Verification Error:", error);
